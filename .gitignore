@@ -1,0 +1,28 @@
+# Ambientes Virtuais
+venv/
+.venv/
+env/
+Lib/
+Scripts/
+
+# Variáveis de Ambiente e Senhas
+.env
+.env.*
+
+# Cache do Python e Arquivos Compilados
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Dados Locais (Não suba os arquivos brutos para o GitHub)
+*.json
+*.parquet
+*.csv
+*.txt
+/data/
+
+# Arquivos de Sistema Operacional
+.DS_Store
+Thumbs.db
