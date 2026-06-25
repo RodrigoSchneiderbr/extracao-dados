@@ -13,22 +13,26 @@ Para evitar custos de nuvem e facilitar a avaliação, toda a infraestrutura da 
 3. **Gerenciamento de Partições:** O PyArrow é utilizado para gerar as partições e os nomes dos arquivos Parquet de forma dinâmica e segura.
 
 ## 🛠️ Tecnologias Utilizadas
+* **Orquestração:** Apache Airflow 2.9 (LocalExecutor) + PostgreSQL 13
 * **Linguagem:** Python 3
 * **Infraestrutura:** Docker & MinIO (S3 API Compatible)
 * **Manipulação de Dados:** Pandas, PyArrow
 * **Interação Cloud:** Boto3, S3Fs
-* **Testes:** Pytest (com Mocking de API)
 
 ## 📂 Estrutura do Repositório
 ```text
-meu-portfolio-de/
+pipeline-dados/
+├── dags/
+│   └── crypto_pipeline.py     # DAG do Airflow definindo a ordem e agendamento
 ├── src/
-│   ├── config.py          # Configurações do cliente S3 (boto3)
-│   ├── extract.py         # Consumo da API e carga na camada Raw (JSON)
-│   └── transform.py       # Transformação e carga na camada Trusted (Parquet)
+│   ├── config.py              # Credenciais e conexão boto3
+│   ├── extract.py             # Ingestão de dados (API -> MinIO Raw)
+│   └── transform.py           # Processamento e otimização (Raw -> MinIO Trusted Parquet)
 ├── tests/
-│   └── test_extract.py    # Testes unitários com simulação (Mock) da API
-├── README.md
+│   └── test_extract.py        # Teste unitário da extração com Mock (Pytest)
+├── docker-compose.yaml        # Infraestrutura como código (Airflow, MinIO, Postgres)
+├── requirements.txt           # Dependências Python
+└── README.md
 ```
 
 ##  Testar o projeto
@@ -50,7 +54,7 @@ pip install -r requirements.txt
 Criar um arquivo .env na raiz
 
 ```text
-MINIO_ENDPOINT=http://localhost:9000
+MINIO_ENDPOINT=http://minio:9000
 MINIO_ACCESS_KEY=minioadmin
 MINIO_SECRET_KEY=minioadmin
 ```
@@ -65,4 +69,14 @@ Aguardar uns segundos e testar.
 ```text
 python src/transform.py
 ```
+##  Execução do Pipeline com airflow
+
+subir docker
+
+```text
+docker-compose up -d
+```
+Data Lake (MinIO): Acesse http://localhost:9001 (User: minioadmin / Pass: minioadmin). Crie um bucket chamado datalake-crypto ou como desejar mas precisa alterar o codigo.
+
+Orquestrador (Airflow): Acesse http://localhost:8080 (User: admin / Pass: admin).
 
